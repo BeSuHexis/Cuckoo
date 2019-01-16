@@ -72,5 +72,19 @@ namespace PalmGroupRESTAPIServer.Controllers
             error.Message = "Seenmessage is not valid";
             return Json((IDtoOutObjects)error);
         }
+        [HttpPost]
+        [Route("message/getByIdChatRoom")]
+        public JsonResult<IDtoOutObjects> GetByIdChatRoom(DtoInGetMessagesFromChatRoom dtoInGetMessagesFromChatRoom )
+        {
+            if (ModelState.IsValid)
+            {
+                return Json(_messageModel.GetByIdChatRoom(dtoInGetMessagesFromChatRoom));
+            }
+
+            DtoOutError error = new DtoOutError();
+            error.Exception = new ObjectIsNotValidException("DtoInGetMessagesFromChatRoom");
+            error.Message = "DtoInGetMessagesFromChatRoom is not valid";
+            return Json((IDtoOutObjects)error);
+        }
     }
 }

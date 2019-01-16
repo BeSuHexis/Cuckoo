@@ -147,5 +147,32 @@ namespace PalmGroupRESTAPIServer.Models
             }
 
         }
+        public IDtoOutObjects GetByIdChatRoom(DtoInGetMessagesFromChatRoom dtoInGetMessagesFromChatRoom)
+        {
+            DtoOutError error = new DtoOutError();
+            if (TokenTools.Authentication(dtoInGetMessagesFromChatRoom.Token, dtoInGetMessagesFromChatRoom.DeviceName))
+            {
+                try
+                {
+                    List<DtoOutMessageDetails> list = MessageTools.getMessageDetailsFromMessagesListByIdChatRoom(TokenTools.getUserFromToken(dtoInGetMessagesFromChatRoom.Token).Id, dtoInGetMessagesFromChatRoom.IdChatRoom);
+                    DtoOutAllMessages result = new DtoOutAllMessages();
+                    result.dtoOutMessageDetails = list;
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    error.Exception = ex;
+                    return error;
+
+                }
+            }
+            else
+            {
+                NotAuthenticatedException ex = new NotAuthenticatedException();
+                error.Exception = ex;
+                return error;
+            }
+
+        }
     }
 }

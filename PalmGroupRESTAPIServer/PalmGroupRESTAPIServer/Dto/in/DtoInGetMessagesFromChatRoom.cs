@@ -6,10 +6,12 @@ using System.Web;
 
 namespace PalmGroupRESTAPIServer.Dto.In
 {
-    public class DtoInGetNewMessages : IAuthorization
-    {
+    public class DtoInGetMessagesFromChatRoom : IAuthorization
+    {        
+   
         [Required]
-        public int IdLastMessage { get; set; }
+       
+        public int IdChatRoom { get; set; }       
         [Required]
         [MinLength(1)]
         [MaxLength(100)]

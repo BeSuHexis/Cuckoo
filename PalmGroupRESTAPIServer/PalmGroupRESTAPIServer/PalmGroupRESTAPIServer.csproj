@@ -277,6 +277,7 @@
     <Compile Include="Dto\In\DtoInCredential.cs" />
     <Compile Include="Dto\In\DtoInEditUser.cs" />
     <Compile Include="Dto\In\DtoInGetById.cs" />
+    <Compile Include="Dto\In\DtoInGetMessagesFromChatRoom.cs" />
     <Compile Include="Dto\In\DtoInGetNewMessages.cs" />
     <Compile Include="Dto\In\DtoInLogout.cs" />
     <Compile Include="Dto\In\DtoInMessage.cs" />

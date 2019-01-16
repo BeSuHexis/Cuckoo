@@ -13,6 +13,7 @@ namespace PalmGroupRESTAPIServer.Tools
         private static MessagesRepository _messagesRepository = new MessagesRepository();
         private static SeenMessagesRepository _seenMessagesRepository = new SeenMessagesRepository();
         private static UsersRepository _usersRepository = new UsersRepository();
+        private static ChatMembersRepository _chatMembersRepository = new ChatMembersRepository();
         public static List<Message> getAllMessages(int idUser)
         { if (_usersRepository.FindBy(x => x.Id== idUser && x.IsDeleted == false).FirstOrDefault()==null)
             {
@@ -25,6 +26,19 @@ namespace PalmGroupRESTAPIServer.Tools
             }
             return messages;
             
+        }
+        public static List<Message> getAllMessagesByIdChatRoom(int idUser, int idChatRoom)
+        {
+            if (_usersRepository.FindBy(x => x.Id == idUser && x.IsDeleted == false).FirstOrDefault() == null)
+            {
+                throw new UserWithThisIdDoesNotExists();
+            }
+            
+
+            return _messagesRepository.FindBy(x => x.IsDeleted == false && x.IdChatRoom == idChatRoom).ToList();
+            
+          
+
         }
 
         public static List<Message> getAllMessages(int idUser, int idLastMessage)
@@ -67,6 +81,39 @@ namespace PalmGroupRESTAPIServer.Tools
             {
                 result.Add(new DtoOutMessageDetails(item));
             }
+            return result;
+        }
+        public static List<DtoOutMessageDetails> getMessageDetailsFromMessagesListByIdChatRoom(int idUser, int idChatRoom)
+        {
+            if (_chatMembersRepository.FindBy(x => x.IdChat == idChatRoom && x.ObjectChat.IsDeleted == false && x.ObjectUser.IsDeleted == false && x.ObjectUser.Id == idUser).FirstOrDefault() == null)
+            {
+                return null;
+            }
+            List<Message> messages = getAllMessagesByIdChatRoom(idUser,idChatRoom);
+            List<SeenMessage> seenMessages = new List<SeenMessage>();
+            List<DtoOutMessageDetails> result = new List<DtoOutMessageDetails>();
+            List<Message> messagestmp = new List<Message>();
+            foreach (Message item in messages)
+            {
+                SeenMessage message = _seenMessagesRepository.FindBy(x => x.IsDeleted == false && x.IdMessage == item.Id).FirstOrDefault();
+                if (message == null)
+                {
+                    messagestmp.Add(item);
+                }
+                else
+                {
+                    seenMessages.Add(message);
+                }
+            }
+            foreach (SeenMessage item in seenMessages)
+            {
+                result.Add(new DtoOutMessageDetails(item));
+            }
+            foreach (Message item in messagestmp)
+            {
+                result.Add(new DtoOutMessageDetails(item));
+            }
+            
             return result;
         }
         public static List<DtoOutMessageDetails> getMessageDetailsFromMessagesList(int idUser, int idLastMessage)
